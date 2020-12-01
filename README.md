@@ -1,0 +1,2 @@
+# Blogly
+SB SQLAlchemy Project
