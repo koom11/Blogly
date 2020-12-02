@@ -6,7 +6,7 @@ def connect_db(app):
     db.app = app
     db.init_app(app)
 
-DEFAULT_IMG_URL = '<i class="fas fa-pen-alt"></i>'
+DEFAULT_IMG_URL = 'https://source.unsplash.com/Gv7xtQRtM3s/160x90'
 
 class User(db.Model):
     """User Model"""
@@ -16,7 +16,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(15), nullable=False, unique=False)
     last_name = db.Column(db.String(15), nullable=False,unique=False)
-    image_url = db.Column(db.String, default='<i class="fas fa-pen-alt"></i>')
+    image_url = db.Column(db.Text, default=DEFAULT_IMG_URL)
 
     @property
     def full_name(self):
