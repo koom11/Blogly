@@ -76,3 +76,9 @@ def delete_user(user_id):
     db.session.commit()
 
     return redirect("/users")
+
+@app.route("/posts")
+def get_posts():
+    """Shows all posts by all users"""
+    posts = Post.query.all()
+    return render_template("blogPosts/show.html", posts=posts)
