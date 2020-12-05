@@ -1,6 +1,6 @@
-from flask import Flask, redirect, request, render_template
+from flask import Flask, redirect, request, render_template, flash
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User
+from models import db, connect_db, User, Post
 
 
 
@@ -47,7 +47,8 @@ def add_new_user():
 def show_user(user_id):
 
     user = User.query.get_or_404(user_id)
-    return render_template("users/show.html", user=user)
+    post = Post.query.all()
+    return render_template("users/show.html", user=user, post=post)
 
 @app.route("/users/<int:user_id>/edit")
 def edit_user_form(user_id):
@@ -82,3 +83,24 @@ def get_posts():
     """Shows all posts by all users"""
     posts = Post.query.all()
     return render_template("blogPosts/show.html", posts=posts)
+
+@app.route("/users/<int:user_id>/posts/new")
+def new_post_form(user_id):
+    """Shows form for current user to create blog post"""
+    user = User.query.get_or_404(user_id)
+    return render_template("blogPosts/new_post.html", user=user)
+
+@app.route('/users/<int:user_id>/posts/new', methods=["POST"])
+def posts_new(user_id):
+    """Handle form submission for creating a new post for a specific user"""
+
+    user = User.query.get_or_404(user_id)
+    new_post = Post(title=request.form['title'],
+                    content=request.form['content'],
+                    user=user)
+
+    db.session.add(new_post)
+    db.session.commit()
+    flash(f"Post '{new_post.title}' added.")
+
+    return redirect(f"/users/{user_id}")

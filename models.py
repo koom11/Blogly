@@ -18,7 +18,7 @@ class User(db.Model):
     first_name = db.Column(db.String(15), nullable=False, unique=False)
     last_name = db.Column(db.String(15), nullable=False,unique=False)
     image_url = db.Column(db.Text, default=DEFAULT_IMG_URL)
-    posts = db.relationship("post", backref="users", cascade="all, delete-orphan")
+    posts = db.relationship("Post", backref="user", cascade="all, delete-orphan")
 
     @property
     def full_name(self):
@@ -35,5 +35,5 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.Text, nullable=False, unique=False)
     content = db.Column(db.Text, nullable=False, unique=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
