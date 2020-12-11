@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-import datetime
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -35,5 +35,30 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.Text, nullable=False, unique=False)
     content = db.Column(db.Text, nullable=False, unique=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    @property
+    def friendly_date(self):
+        """Return better formatted date and time"""
+        return self.created_at.strftime("%a %b %#d  %Y, %#I:%M %p")
+
+
+class Tag(db.Model):
+    """Tag. A post can have many tags and a tag can be associated with many posts."""
+
+    __tablename__ = "tags"
+
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    name = db.Column(db.Text, nullable=False, unique=True)
+
+    posts = db.relationship('Post', secondary='post_tags', backref='tags')
+
+
+class PostTag(db.Model):
+    """PostTag. Join table for Posts and Tags."""
+
+    __tablename__ = "post_tags"
+
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), primary_key=True)
+    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)

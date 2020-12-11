@@ -35,7 +35,12 @@
                 </li>
                 {% endfor %}
             </ul> 
-            <p><a href="/users/{{user.id}}/posts/new">Add Post</a></p>
+            <form >
+                <button class="btn btn-primary btn-sm" 
+                        formaction="/users/{{user.id}}/posts/new"
+                        formmethod="GET">Add Post
+                </button>
+            </form>
         </div>
     </div>
 
