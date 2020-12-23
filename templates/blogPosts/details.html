@@ -9,8 +9,14 @@
     <p>{{post.content}}</p>
 
     <p><em>By {{post.user.full_name}}
-        @ {{post.friendly_date}}
+        on {{post.friendly_date}}
     </em></p>
+
+    {% if post.tags %}
+    <p>
+        <h3 class="display-1">Tags:</h3>
+    </p>
+    {% endif %}
 
     <form>
         <button class="btn btn-outline-dark" formmethod="GET" formaction="/users/{{post.user_id}}">Cancel</button>

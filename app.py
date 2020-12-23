@@ -26,6 +26,9 @@ def pagr_not_found(e):
     """Show 404 Message"""
     return render_template('404.html'), 404
 
+
+
+"""USER ROUTES START HERE"""
 @app.route("/users")
 def users_index():
 
@@ -112,7 +115,14 @@ def posts_new(user_id):
     flash(f"Post '{new_post.title}' added.")
 
     return redirect(f"/users/{user_id}")
+"""USER ROUTES END HERE"""
 
+
+
+
+
+
+"""POST MODEL ROUTES START HERE"""
 @app.route('/posts/<int:post_id>')
 def show_post(post_id):
     """Show specific post"""
@@ -146,11 +156,19 @@ def delete_post(post_id):
     db.session.commit()
 
     return redirect(f"/users/{post.user_id}")
+"""POST ROUTES END HERE"""
 
+
+
+
+
+
+"""TAG ROUTES START HERE"""
 @app.route("/tags")
 def get_all_tags():
     """Show All Tags"""
-    return render_template("tags/all_tags.html")
+    tags = Tag.query.all()
+    return render_template("tags/all_tags.html", tags=tags)
 
 @app.route("/tags/new")
 def new_tag_form():
@@ -177,3 +195,20 @@ def get_tag(tag_id):
     tag = Tag.query.get_or_404(tag_id)
     posts = Post.query.all()
     return render_template("tags/show.html", tag=tag, posts=posts)
+
+@app.route("/tags/<int:tag_id>/edit")
+def show_tag_edit_form(tag_id):
+    """Show form used to edit tags"""
+    tag = Tag.query.get_or_404(tag_id)
+    return render_template("tags/edit.html", tag=tag)
+
+@app.route("/tags/<int:tag_id>/edit", methods=["POST"])
+def edit_tag(tag_id):
+    """Submit form to edit tag"""
+    tag = Tag.query.get_or_404(tag_id)
+
+    db.session.add(tag)
+    db.session.commit()
+    flash(f"Tag '{tag.name}' fixed!")
+
+    return redirect("/tags")
